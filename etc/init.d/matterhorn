@@ -42,21 +42,34 @@ failed() {
 }
 
 start() {
-	smsg = "Starting $prog: "
+	smsg="Starting $prog: "
 	echo -n $smsg
 
-	lockfile -r1 -0 $lockfile 2> /dev/null && $matterhorn --daemon
+	$matterhorn --daemon
 	retval=$?
-	[ $retval -eq 0 ] && rm -f $lockfile && failed $smsg || success $smsg
+	if [ $retval -eq 0 ]
+	then
+		touch $lockfile
+		success "$smsg"
+	else
+		rm -f $lockfile
+		failed "$smsg"
+	fi
 	return $retval
 }
 
 stop() {
-	smsg = "Stopping $prog: "
+	smsg="Stopping $prog: "
 	echo -n $smsg
 	[ -f $lockfile ] && $matterhorn --quit
 	retval=$?
-	[ $retval -eq 0 ] && rm -f $lockfile
+	if [ $retval -eq 0 ]
+	then
+		rm -f $lockfile
+		success "$smsg"
+	else
+		failed "$smsg"
+	fi
 	return $retval
 }
 
@@ -75,7 +88,16 @@ force_reload() {
 
 rh_status() {
 	# run checks to determine if the service is running or use generic status
-	status $prog
+	if [ -f $pidfile ]
+	then
+		pid="$(cat $pidfile)"
+		ps p $pid &> /dev/null && echo $"${prog} (pid $pid) is running..." && return 0
+		echo $"${prog} dead but pid file exists"
+		return 1
+	fi
+	[ -f $lockfile ] && echo "${prog} dead but subsys locked" && return 2
+	echo "${prog} is stopped"
+	return 3
 }
 
 rh_status_q() {
