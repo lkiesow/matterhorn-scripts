@@ -1,0 +1,19 @@
+The attached files replace all Matterhorn start, stop and sysvinit scripts: 
+
+/usr/sbin/matterhorn
+	The new start and stop script. It can run Matterhorn both as daemon and
+	interactively. It only allows one Matterhorn to run at the same time and
+	keeps track of its process id for shutdown, … 
+
+/etc/init.d/matterhorn
+	The new SysV-Init script. It now supports all necessary options (start,
+	stop, status, restart, condrestart, …) and will return a correct code. 
+
+/opt/matterhorn/etc/service.conf
+/etc/matterhorn/service.conf
+	The configuration file. Configuration are done using this file only. Do not
+	alter the executable files. Using this configuration files one can specify
+	the matterhorn directories, user, etc.
+	If both files exists, the configuration frm /etc is more “important”. This
+	means that values from /opt...service.conf will overwrite those set in
+	/opt...service.conf. However, please choose one location.
