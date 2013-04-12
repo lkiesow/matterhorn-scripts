@@ -28,6 +28,7 @@
 matterhorn="/usr/sbin/matterhorn"
 prog="matterhorn"
 lockfile=/var/lock/subsys/$prog
+[ -d "/var/lock/subsys" ] || lockfile="/var/lock/LCK.${prog}"
 pidfile="/var/run/${prog}.pid"
 
 killdelay=7
