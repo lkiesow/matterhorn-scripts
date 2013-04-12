@@ -22,9 +22,6 @@
 #              videos.
 ### END INIT INFO
 
-# Source function library.
-. /etc/rc.d/init.d/functions
-
 matterhorn="/usr/sbin/matterhorn"
 prog="matterhorn"
 lockfile=/var/lock/subsys/$prog
@@ -36,21 +33,29 @@ killdelay=7
 # Load configuration files
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
-start() {
-	echo -n $"Starting $prog: "
+success() {
+	printf "\r%-58s [\033[32m  OK  \033[0m]\n" "$1"
+}
 
-	daemon --check $prog $matterhorn --daemon
+failed() {
+	printf "\r%-58s [\033[31mFAILED\033[0m]\n" "$1"
+}
+
+start() {
+	smsg = "Starting $prog: "
+	echo -n $smsg
+
+	lockfile -r1 -0 $lockfile 2> /dev/null && $matterhorn --daemon
 	retval=$?
-	echo
-	[ $retval -eq 0 ] && touch $lockfile
+	[ $retval -eq 0 ] && rm -f $lockfile && failed $smsg || success $smsg
 	return $retval
 }
 
 stop() {
-	echo -n $"Stopping $prog: "
-	killproc -p $pidfile -d $killdelay $prog
+	smsg = "Stopping $prog: "
+	echo -n $smsg
+	[ -f $lockfile ] && $matterhorn --quit
 	retval=$?
-	echo
 	[ $retval -eq 0 ] && rm -f $lockfile
 	return $retval
 }

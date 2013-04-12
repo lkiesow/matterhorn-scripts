@@ -22,15 +22,18 @@ clean_felix_cache() {
 stop_matterhorn() {
 	[ ! -e $pidfile ] && return
 	pid=`cat $pidfile`
+	attempts=1
 	kill $pid
 	ps p $pid &> /dev/null
 	# Wait for termination
 	while [ $? -eq 0 ]
 	do
 		sleep 1
+		attempts=$[$attempts+1]
+		[ $attempts -gt 10 ] && kill -s KILL $pid
 		ps p $pid &> /dev/null
 	done
-	rm $pidfile
+	rm -f $pidfile
 	return 0
 }
 
@@ -50,7 +53,7 @@ fi
 [ "$1" == "--quit" ] && stop_matterhorn && exit 0
 
 # Check if Matterhorn is already running
-[ -e $pidfile ] && [ -e /proc/`cat $pidfile`/ ] && \
+[ -e $pidfile ] && ps p "`cat $pidfile`" && \
 	echo "Matterhorn already running" && exit 0
 
 rm -f $pidfile
