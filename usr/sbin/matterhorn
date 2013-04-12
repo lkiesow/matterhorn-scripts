@@ -74,6 +74,9 @@ DEBUG_SUSPEND="n"
 FELIX_CONFIG_DIR=/opt/matterhorn/etc
 FELIX_WORK_DIR=/opt/matterhorn/work
 FELIX_CACHE_DIR="$FELIX_WORK_DIR/felix-cache"
+JMX_REMOTE_PORT="1099"
+JMX_REMOTE_AUTHENTICATE="false"
+JMX_REMOTE_SSL="false"
 
 # Load configuration files
 [ -e $config_opt ] && . $config_opt
@@ -87,10 +90,9 @@ FELIX="${FELIX} -Dfelix.fileinstall.dir=$FELIX_CONFIG_DIR/load"
 
 # Configure Java Management Extensions (JMX) 
 JMX="-Dcom.sun.management.jmxremote"
-JMX="${JMX} -Dcom.sun.management.jmxremote"
-JMX="${JMX} -Dcom.sun.management.jmxremote.port=1099"
-JMX="${JMX} -Dcom.sun.management.jmxremote.authenticate=false"
-JMX="${JMX} -Dcom.sun.management.jmxremote.ssl=false"
+JMX="${JMX} -Dcom.sun.management.jmxremote.port=${JMX_REMOTE_PORT}"
+JMX="${JMX} -Dcom.sun.management.jmxremote.authenticate=${JMX_REMOTE_AUTHENTICATE}"
+JMX="${JMX} -Dcom.sun.management.jmxremote.ssl=${JMX_REMOTE_SSL}"
 
 LOGGING="-Dopencast.logdir=$LOGDIR"
 LOGGING="${LOGGING} -Dbundles.configuration.location=$FELIX_CONFIG_DIR"
