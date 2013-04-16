@@ -45,23 +45,18 @@ start() {
 	smsg="Starting $prog: "
 	echo -n $smsg
 
-	# Create a lockfile for matterhorn.
-	# This will fail if one already exists.
-	lockfile -! -r0 $lockfile
-	if [ $? -eq 0 ]
-	then
-		# If we could not create a lockfile, check if matterhorn is already
-		# running. If its running start is always successfull. If not start
-		# should fail.
-		rh_status_q && retval=0 || retval=1
-	else
-		# We could create the lock. Now we start matterhorn.
-		$matterhorn --daemon
-		retval=$?
-		# If we failed to start matterhorn but a lock was created, we have to
-		# make shure to remove the lockfile:
-		[ $retval -eq 0 ] && rm -f $lockfile
-	fi
+	# Start matterhorn and create a lockfile
+	( flock -n 9 && $matterhorn --daemon ) 9> $lockfile
+	retval=$?
+
+	# If we failed with retval=1 matterhorn might be already up and running. In
+	# that case we still want to return a success:
+	[ $retval -eq 1 ] && rh_status_q && echo && exit 1
+
+	# If we failed to start matterhorn but a lock was created, we want to remove
+	# the file (flock does not remove the file automatically):
+	[ ! $retval -eq 0 ] && rm -f $lockfile
+
 	[ $retval -eq 0 ] && success "$smsg" || failed "$smsg"
 	return $retval
 }
@@ -96,13 +91,14 @@ force_reload() {
 
 rh_status() {
 	# run checks to determine if the service is running or use generic status
-	if [ -f $pidfile ]
+	if [ -f $lockfile ] && [ -f $pidfile ]
 	then
 		pid="$(cat $pidfile)"
 		ps p $pid &> /dev/null && echo $"${prog} (pid $pid) is running..." && return 0
 		echo $"${prog} dead but pid file exists"
 		return 1
 	fi
+	[ -f $pidfile ] && echo "pidfile exists but subsys not locked" && return 4
 	[ -f $lockfile ] && echo "${prog} dead but subsys locked" && return 2
 	echo "${prog} is stopped"
 	return 3

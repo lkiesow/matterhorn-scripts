@@ -53,7 +53,7 @@ fi
 [ "$1" == "--quit" ] && stop_matterhorn && exit 0
 
 # Check if Matterhorn is already running
-[ -f $pidfile ] && ps p "`cat $pidfile`" && \
+[ -f $pidfile ] && ps p "`cat $pidfile`" &> /dev/null && \
 	echo "Matterhorn already running" && exit 0
 
 # Create the pidfile as quickly as possible after we are shure the user wants
