@@ -30,7 +30,7 @@ stop_matterhorn() {
 	do
 		sleep 1
 		attempts=$[$attempts+1]
-		[ $attempts -gt 10 ] && kill -s KILL $pid
+		[ $attempts -gt 20 ] && kill -s KILL $pid
 		ps p $pid &> /dev/null
 	done
 	rm -f $pidfile
