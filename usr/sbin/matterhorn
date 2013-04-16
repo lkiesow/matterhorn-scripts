@@ -42,6 +42,13 @@ if [ $# -ne 1 ] || ( [ "$1" != '--daemon' ] && \
 	[ "$1" != '--interactive' ] && [ "$1" != '--quit' ] )
 then
 	echo "Usage: $0 [ --daemon | --interactive | --quit | --help ]"
+	echo ''
+	echo 'OPTIONS:'
+	echo '  --daemon       Run matterhorn as _unmanaged_ daemon.'
+	echo '                 Consider using the SysV init script.'
+	echo '  --interactive  Run matterhorn in interactive mode.'
+	echo '  --quit         Stop a previously started matterhorn.'
+	echo '  --help         Show this message.'
 	exit 0
 fi
 
