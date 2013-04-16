@@ -45,16 +45,24 @@ start() {
 	smsg="Starting $prog: "
 	echo -n $smsg
 
-	$matterhorn --daemon
-	retval=$?
-	if [ $retval -eq 0 ]
+	# Create a lockfile for matterhorn.
+	# This will fail if one already exists.
+	lockfile -! -r0 $lockfile
+	if [ $? -eq 0 ]
 	then
-		touch $lockfile
-		success "$smsg"
+		# If we could not create a lockfile, check if matterhorn is already
+		# running. If its running start is always successfull. If not start
+		# should fail.
+		rh_status_q && retval=0 || retval=1
 	else
-		rm -f $lockfile
-		failed "$smsg"
+		# We could create the lock. Now we start matterhorn.
+		$matterhorn --daemon
+		retval=$?
+		# If we failed to start matterhorn but a lock was created, we have to
+		# make shure to remove the lockfile:
+		[ $retval -eq 0 ] && rm -f $lockfile
 	fi
+	[ $retval -eq 0 ] && success "$smsg" || failed "$smsg"
 	return $retval
 }
 
