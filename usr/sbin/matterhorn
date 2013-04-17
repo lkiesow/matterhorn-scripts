@@ -6,6 +6,13 @@ config="/etc/${prog}/service.conf"
 config_opt="/opt/${prog}/etc/service.conf"
 pidfile="/var/run/${prog}.pid"
 
+# Times to try sending a SIGTERM before sending a SIGKILL
+kill_attempts=20
+# Time in seconds to sleep between each try
+kill_attempts_sleep=1
+# The time to wait before the SIGKILL is hence (attempts * attempts_sleep)
+# seconds. Do not set this value to low. A “normal” fresh Matterhorn needs
+# about seven seconds before its complete shutdown.
 
 clean_felix_cache() {
 	if [ -d "$FELIX_CACHE_DIR" ]
@@ -18,7 +25,6 @@ clean_felix_cache() {
 	fi
 }
 
-
 stop_matterhorn() {
 	[ ! -f $pidfile ] && return
 	pid=`cat $pidfile`
@@ -28,9 +34,9 @@ stop_matterhorn() {
 	# Wait for termination
 	while [ $? -eq 0 ]
 	do
-		sleep 1
+		sleep $kill_attempts_sleep
 		attempts=$[$attempts+1]
-		[ $attempts -gt 20 ] && kill -s KILL $pid
+		[ $attempts -gt $kill_attempts ] && kill -s KILL $pid
 		ps p $pid &> /dev/null
 	done
 	rm -f $pidfile
