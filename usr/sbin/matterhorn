@@ -98,6 +98,7 @@ FELIX_CACHE_DIR="$FELIX_WORK_DIR/felix-cache"
 JMX_REMOTE_PORT="1099"
 JMX_REMOTE_AUTHENTICATE="false"
 JMX_REMOTE_SSL="false"
+ADD_OPTS=""
 
 # Load configuration files
 [ -e $config_opt ] && . $config_opt
@@ -139,7 +140,7 @@ else
 	DEBUG=""
 fi
 
-MATTERHORN_OPTS="$GOSH $DEBUG $FELIX $GRAPHICS $JAVA $LOGGING $JMX"
+MATTERHORN_OPTS="$GOSH $DEBUG $FELIX $GRAPHICS $JAVA $LOGGING $JMX $ADD_OPTS"
 
 # Execute Capture-Agent device configuration
 $IS_CA && $CA/device_config.sh
