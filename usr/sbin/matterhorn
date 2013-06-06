@@ -85,7 +85,6 @@ echo $$ > $pidfile
 MATTERHORN=/opt/matterhorn
 CA=$MATTERHORN/capture-agent
 MATTERHORN_USER=matterhorn
-IS_CA=false
 LOGDIR=${MATTERHORN}/logs
 LOGLEVEL="WARN"
 ECLIPSE_LOGLEVEL="SEVERE"
@@ -99,6 +98,12 @@ JMX_REMOTE_PORT="1099"
 JMX_REMOTE_AUTHENTICATE="false"
 JMX_REMOTE_SSL="false"
 ADD_OPTS=""
+if [ -f $MATTERHORN/lib/matterhorn/matterhorn-capture-agent-impl*.jar ]
+then
+	IS_CA=true
+else
+	IS_CA=false
+fi
 
 # Load configuration files
 [ -e $config_opt ] && . $config_opt
