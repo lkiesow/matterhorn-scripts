@@ -14,14 +14,12 @@ kill_attempts_sleep=1
 # seconds. Do not set this value to low. A “normal” fresh Matterhorn needs
 # about seven seconds before its complete shutdown.
 
+# Remove all files from the felix cache (bundle configuration, …)
+# This will prevent trouble after package updates.
 clean_felix_cache() {
 	if [ -d "$FELIX_CACHE_DIR" ]
 	then
-		for bundle in `find "$FELIX_CACHE_DIR" -type f -name bundle.location | \
-			xargs grep --files-with-match -e "file:" | sed -e s/bundle.location// `
-		do
-			rm -r $bundle
-		done
+		rm -rf $FELIX_CACHE_DIR/*
 	fi
 }
 
