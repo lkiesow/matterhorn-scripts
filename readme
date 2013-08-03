@@ -9,11 +9,10 @@ The attached files replace all Matterhorn start, stop and sysvinit scripts:
 	The new SysV-Init script. It now supports all necessary options (start,
 	stop, status, restart, condrestart, …) and will return a correct code. 
 
-/opt/matterhorn/etc/service.conf
 /etc/matterhorn/service.conf
 	The configuration file. Configuration are done using this file only. Do not
 	alter the executable files. Using this configuration files one can specify
 	the matterhorn directories, user, etc.
 	If both files exists, the configuration frm /etc is more “important”. This
-	means that values from /opt...service.conf will overwrite those set in
+	means that values from /etc...service.conf will overwrite those set in
 	/opt...service.conf. However, please choose one location.
