@@ -1,4 +1,4 @@
 #!/bin/sh
-cp etc/init.d/matterhorn           etc-init.d-matterhorn
-cp opt/matterhorn/etc/service.conf opt-matterhorn-etc-service.conf
-cp usr/sbin/matterhorn             usr-sbin-matterhorn
+cp etc/init.d/matterhorn        etc-init.d-matterhorn
+cp etc/matterhorn/service.conf  etc-matterhorn-service.conf
+cp usr/sbin/matterhorn          usr-sbin-matterhorn
