@@ -82,18 +82,18 @@ echo $$ > $pidfile
 ##
 
 # Load default configuration
-MATTERHORN=/opt/matterhorn
+MATTERHORN=/usr/share/matterhorn
 CA=$MATTERHORN/capture-agent
 MATTERHORN_USER=matterhorn
-LOGDIR=${MATTERHORN}/logs
+LOGDIR=/var/log/matterhorn
 LOGLEVEL="WARN"
 ECLIPSE_LOGLEVEL="SEVERE"
 [ -z $DEBUG ] && DEBUG=false
 DEBUG_PORT="8000"
 DEBUG_SUSPEND="n"
-FELIX_CONFIG_DIR=${MATTERHORN}/etc
-FELIX_WORK_DIR=${MATTERHORN}/work
-FELIX_CACHE_DIR="$FELIX_WORK_DIR/felix-cache"
+FELIX_CONFIG_DIR=/etc/matterhorn
+FELIX_WORK_DIR=/srv/matterhorn
+FELIX_CACHE_DIR="/tmp/matterhorn/felix-cache"
 JMX_REMOTE_PORT="1099"
 JMX_REMOTE_AUTHENTICATE="false"
 JMX_REMOTE_SSL="false"

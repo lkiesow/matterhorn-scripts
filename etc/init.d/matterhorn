@@ -13,6 +13,8 @@
 ### BEGIN INIT INFO
 # Provides: matterhorn
 # Required-Start: $local_fs $remote_fs $syslog $network
+# Required-Stop:
+# Default-Stop:
 # Short-Description: run matterhorn
 # Description: Matterhorn is a free, open-source platform to support the
 #              management of educational audio and video content. Institutions
@@ -24,7 +26,7 @@
 
 matterhorn="/usr/sbin/matterhorn"
 prog="matterhorn"
-lockfile=/var/lock/subsys/$prog
+lockfile=/var/lock/subsys/matterhorn
 [ -d "/var/lock/subsys" ] || lockfile="/var/lock/LCK.${prog}"
 pidfile="/var/run/${prog}.pid"
 
