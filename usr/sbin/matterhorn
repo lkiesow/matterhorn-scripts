@@ -128,6 +128,9 @@ LOGGING="${LOGGING} -Declipselink.logging.level=${ECLIPSE_LOGLEVEL}"
 GRAPHICS="-Djava.awt.headless=true -Dawt.toolkit=sun.awt.HeadlessToolkit"
 GRAPHICS="${GRAPHICS} -Djava.awt.headless=true -Dawt.toolkit=sun.awt.HeadlessToolkit"
 
+DISABLE_PHONEHOME="-Dnet.sf.ehcache.skipUpdateCheck=true"
+DISABLE_PHONEHOME="${DISABLE_PHONEHOME} -Dorg.terracotta.quartz.skipUpdateCheck=true"
+
 JAVA="-Xms1024m -Xmx1024m -XX:MaxPermSize=256m"
 [ "$1" == '--daemon' ] && GOSH="-Dgosh.args='--noshutdown -c noop=true'"
 
@@ -143,7 +146,7 @@ else
 	DEBUG=""
 fi
 
-MATTERHORN_OPTS="$GOSH $DEBUG $FELIX $GRAPHICS $JAVA $LOGGING $JMX $ADD_OPTS"
+MATTERHORN_OPTS="$GOSH $DEBUG $FELIX $GRAPHICS $JAVA $LOGGING $JMX $DISABLE_PHONEHOME $ADD_OPTS"
 
 # Execute Capture-Agent device configuration
 $IS_CA && $CA/device_config.sh
