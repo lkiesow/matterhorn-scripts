@@ -125,8 +125,10 @@ LOGGING="${LOGGING} -Djava.util.logging.config.file=$FELIX_CONFIG_DIR/services/j
 LOGGING="${LOGGING} -Dorg.ops4j.pax.logging.DefaultServiceLog.level=${LOGLEVEL}"
 LOGGING="${LOGGING} -Declipselink.logging.level=${ECLIPSE_LOGLEVEL}"
 
-GRAPHICS="-Djava.awt.headless=true -Dawt.toolkit=sun.awt.HeadlessToolkit"
-GRAPHICS="${GRAPHICS} -Djava.awt.headless=true -Dawt.toolkit=sun.awt.HeadlessToolkit"
+GRAPHICS="-Djava.awt.headless=true"
+GRAPHICS="${GRAPHICS} -Dawt.toolkit=sun.awt.HeadlessToolkit"
+
+JETTY="-Dorg.mortbay.jetty.Request.maxFormContentSize=1000000"
 
 DISABLE_PHONEHOME="-Dnet.sf.ehcache.skipUpdateCheck=true"
 DISABLE_PHONEHOME="${DISABLE_PHONEHOME} -Dorg.terracotta.quartz.skipUpdateCheck=true"
@@ -146,7 +148,7 @@ else
 	DEBUG=""
 fi
 
-MATTERHORN_OPTS="$GOSH $DEBUG $FELIX $GRAPHICS $JAVA $LOGGING $JMX $DISABLE_PHONEHOME $ADD_OPTS"
+MATTERHORN_OPTS="$GOSH $DEBUG $FELIX $GRAPHICS $JETTY $JAVA $LOGGING $JMX $DISABLE_PHONEHOME $ADD_OPTS"
 
 # Execute Capture-Agent device configuration
 $IS_CA && $CA/device_config.sh
